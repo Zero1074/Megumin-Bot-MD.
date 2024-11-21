@@ -1,0 +1,11 @@
+{
+  "plugins": {
+    "play": {
+      "texto3": "El archivo es demasiado grande para ser enviado",
+      "texto4": "Hubo un error al descargar el audio",
+      "texto5": "El video es demasiado grande para ser enviado",
+      "texto6": "Hubo un error al descargar el video",
+      "texto7": "No se encontraron resultados para tu búsqueda"
+    }
+  }
+}
