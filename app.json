@@ -1,0 +1,11 @@
+{
+  "name": "Megumin-Bot-MD",
+  "description": "Bot de WhatsApp en JavaScript.",
+  "repository": "https://github.com/Zero1074/Megumin-Bot-MD",
+  "logo": "https://i.ibb.co/Qn1W6cP/image.png",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
