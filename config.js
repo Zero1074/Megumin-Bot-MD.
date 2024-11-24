@@ -1,40 +1,16 @@
-import { watchFile, unwatchFile } from 'fs';
-import chalk from 'chalk';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
-import moment from 'moment-timezone';
+// Configuración principal del bot
+module.exports = {
+    botName: "Megumin-Bot-MD",       // Nombre del bot
+    prefix: "/",                     // Prefijo para los comandos
+    sessionFile: "./session.json",   // Archivo donde se guarda la sesión
+    pluginsFolder: "./plugins",      // Carpeta para comandos
+    defaultCommandResponse: "Comando no reconocido. Usa /menu para ver las opciones disponibles.",
 
-// Configuración global del bot
-global.botnumber = '5211234567890'; // Reemplaza con el número del bot
-global.defaultLanguage = 'es';
-global.botName = 'Megumin-Bot-MD';
-global.owner = [
-  ['5219876543210', '👑 Creador 👑', true] // Número del creador del bot
-];
-global.prefix = '!';
-global.packname = 'Megumin-Bot';
-global.author = 'Zero1074';
-global.welcomeMessage = '¡Bienvenido/a! Soy Megumin-Bot-MD. ¿En qué puedo ayudarte?';
-global.goodbyeMessage = '¡Adiós! Espero verte pronto.';
-global.moment = moment.tz('America/Mexico_City');
-global.apiKeys = {
-  ytDlExec: 'yt-dl-exec'
+    // Configuración de mensajes
+    messages: {
+        menu: "Aquí está el menú",   // Respuesta al comando /menu
+        qrInstruction: "Escanea este código QR para conectarte.",
+        digitCodeInstruction: "Conexión con código de 8 dígitos no implementada aún.",
+        botReady: "Bot conectado y listo para usarse.",
+    },
 };
-
-// Multimedia o recursos estáticos
-global.menuImage = fs.readFileSync('./src/assets/images/menu.png'); // Cambia la ruta si es necesario
-
-// Información del bot
-global.botDate = `*[ 📅 ] Fecha:* ${global.moment.format('DD/MM/YY')}`;
-global.botTime = `*[ ⏳ ] Hora:* ${global.moment.format('HH:mm:ss')}`;
-
-// Configuración de texto
-global.waitMessage = '*[ ⏳ ] Procesando tu solicitud...*';
-
-// Observación de cambios en el archivo
-const file = fileURLToPath(import.meta.url);
-watchFile(file, () => {
-  unwatchFile(file);
-  console.log(chalk.greenBright('Configuración actualizada: \'config.js\''));
-  import(`${file}?update=${Date.now()}`);
-});
