@@ -1,16 +1,15 @@
-// Configuración principal del bot
-module.exports = {
-    botName: "Megumin-Bot-MD",       // Nombre del bot
-    prefix: "/",                     // Prefijo para los comandos
-    sessionFile: "./session.json",   // Archivo donde se guarda la sesión
-    pluginsFolder: "./plugins",      // Carpeta para comandos
-    defaultCommandResponse: "Comando no reconocido. Usa /menu para ver las opciones disponibles.",
+const config = require("./config.js");
 
-    // Configuración de mensajes
-    messages: {
-        menu: "Aquí está el menú",   // Respuesta al comando /menu
-        qrInstruction: "Escanea este código QR para conectarte.",
-        digitCodeInstruction: "Conexión con código de 8 dígitos no implementada aún.",
-        botReady: "Bot conectado y listo para usarse.",
-    },
-};
+// Ejemplo: Usar configuraciones desde config.js
+console.log(`Iniciando ${config.botName}...`);
+console.log(config.messages.botReady);
+
+// Usar el prefijo para manejar comandos
+if (msg.body.startsWith(config.prefix)) {
+    const command = msg.body.slice(config.prefix.length).trim();
+    if (command === "menu") {
+        msg.reply(config.messages.menu);
+    } else {
+        msg.reply(config.defaultCommandResponse);
+    }
+}
