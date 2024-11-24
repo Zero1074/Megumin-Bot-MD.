@@ -1,40 +1,63 @@
-import makeWASocket, { DisconnectReason, useMultiFileAuthState } from '@whiskeysockets/baileys';
-import qrcode from 'qrcode-terminal';
-import chalk from 'chalk';
+const { Client } = require("whatsapp-web.js");
+const qrcode = require("qrcode-terminal");
+const inquirer = require("inquirer");
+const fs = require("fs");
+require("dotenv").config();
 
-(async () => {
-  // Autenticación usando múltiples archivos
-  const { state, saveCreds } = await useMultiFileAuthState('./auth_info'); // Carpeta para guardar las credenciales
+// Archivo para guardar la sesión
+const SESSION_FILE = "./session.json";
+let sessionData;
 
-  // Crear el socket
-  const sock = makeWASocket({
-    auth: state,
-    printQRInTerminal: true, // Esta opción muestra el QR directamente en la terminal
-  });
+// Cargar sesión si existe
+if (fs.existsSync(SESSION_FILE)) {
+    sessionData = require(SESSION_FILE);
+}
 
-  // Evento para manejar la reconexión o desconexión
-  sock.ev.on('connection.update', (update) => {
-    const { connection, qr } = update;
+const client = new Client({
+    session: sessionData,
+});
 
-    if (qr) {
-      // Mostrar el QR en la consola
-      console.log(chalk.green('Escanea este código QR con tu WhatsApp:'));
-      qrcode.generate(qr, { small: true }); // Código QR en formato pequeño
+client.on("qr", (qr) => {
+    qrcode.generate(qr, { small: true });
+    console.log("Escanea este código QR para conectarte.");
+});
+
+client.on("authenticated", (session) => {
+    fs.writeFileSync(SESSION_FILE, JSON.stringify(session));
+    console.log("Sesión autenticada y guardada.");
+});
+
+client.on("ready", () => {
+    console.log("Bot conectado y listo para usarse.");
+});
+
+client.on("message", (msg) => {
+    if (msg.body === "/menu") {
+        msg.reply("Aquí está el menú");
     }
+});
 
-    if (connection === 'close') {
-      const reason = new DisconnectReason(update.lastDisconnect?.error)?.output?.statusCode || 'unknown';
-      console.log(chalk.redBright(`Conexión cerrada: ${reason}`));
+async function startBot() {
+    const { option } = await inquirer.prompt([
+        {
+            type: "list",
+            name: "option",
+            message: "¿Cómo quieres conectarte?",
+            choices: [
+                { name: "Código QR", value: 1 },
+                { name: "Código de 8 dígitos", value: 2 },
+            ],
+        },
+    ]);
 
-      if (reason !== 401) {
-        console.log(chalk.yellow('Intentando reconectar...'));
-        sock.ev.emit('restart');
-      }
-    } else if (connection === 'open') {
-      console.log(chalk.blueBright('¡Conexión exitosa a WhatsApp!'));
+    if (option === 1) {
+        console.log("Conexión usando código QR...");
+        client.initialize();
+    } else if (option === 2) {
+        console.log("Conexión usando código de 8 dígitos...");
+        console.log("Por ahora, esta función no está implementada.");
+        // Implementación futura aquí.
     }
-  });
+}
 
-  // Guardar las credenciales
-  sock.ev.on('creds.update', saveCreds);
-})();
+startBot();
