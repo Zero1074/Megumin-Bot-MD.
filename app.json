@@ -1,8 +1,22 @@
 {
   "name": "Megumin-Bot-MD",
-  "description": "Bot de WhatsApp en JavaScript.",
+  "description": "Un bot de WhatsApp compatible con Replit que utiliza el prefijo '/' para comandos.",
   "repository": "https://github.com/Zero1074/Megumin-Bot-MD",
-  "logo": "https://i.ibb.co/Qn1W6cP/image.png",
+  "logo": "https://nodejs.org/static/images/logo.svg",
+  "keywords": ["whatsapp", "bot", "nodejs", "replit", "megumin"],
+  "scripts": {
+    "postdeploy": "npm install && npm start"
+  },
+  "env": {
+    "SESSION_FILE": {
+      "description": "Ruta al archivo de sesión del bot.",
+      "value": "./session.json"
+    },
+    "PREFIX": {
+      "description": "Prefijo utilizado para los comandos del bot.",
+      "value": "/"
+    }
+  },
   "buildpacks": [
     {
       "url": "heroku/nodejs"
